@@ -19,7 +19,7 @@ from typing import Any, Dict, List, Tuple
 
 import numpy as np
 from pyquil import Program
-from pyquil.api import QuantumComputer, WavefunctionSimulator
+from pyquil.api import QuantumComputer, WavefunctionSimulator, QVMConnection
 from pyquil.gates import H, MEASURE
 from pyquil.paulis import exponential_map, PauliSum
 from scipy import optimize, ufunc
@@ -191,6 +191,7 @@ class QAOA(object):
         cost_ham = reduce(lambda x, y: x + y, self.cost_ham)
         # maximizing the cost function!
         param_prog = self.get_parameterized_program()
+        print(self.vqe_options)
         result = vqe.vqe_run(param_prog, cost_ham, stacked_params, qc=self.qc,
                              **self.vqe_options)
         self.result = result

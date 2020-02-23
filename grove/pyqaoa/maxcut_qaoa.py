@@ -28,7 +28,7 @@ from grove.pyqaoa.qaoa import QAOA
 
 def maxcut_qaoa(graph, steps=1, rand_seed=None, connection=None, samples=None,
                 initial_beta=None, initial_gamma=None, minimizer_kwargs=None,
-                vqe_option=None):
+                vqe_option=None, mea_noise=None):
     """
     Max cut set up method
 
@@ -50,13 +50,15 @@ def maxcut_qaoa(graph, steps=1, rand_seed=None, connection=None, samples=None,
     if not isinstance(graph, nx.Graph) and isinstance(graph, list):
         maxcut_graph = nx.Graph()
         for edge in graph:
-            maxcut_graph.add_edge(*edge)
+            maxcut_graph.add_edge(edge[0],edge[1],weight=edge[2])
         graph = maxcut_graph.copy()
 
     cost_operators = []
     driver_operators = []
-    for i, j in graph.edges():
-        cost_operators.append(PauliTerm("Z", i, 0.5)*PauliTerm("Z", j) + PauliTerm("I", 0, -0.5))
+    for e in graph.edges(data=True):
+        print(e)
+        i = e[0]; j = e[1]; w = e[2]['weight']
+        cost_operators.append(PauliTerm("Z", i, 0.5)*PauliTerm("Z", j)*w + PauliTerm("I", 0, -0.5))
     for i in graph.nodes():
         driver_operators.append(PauliSum([PauliTerm("X", i, -1.0)]))
 
@@ -70,6 +72,9 @@ def maxcut_qaoa(graph, steps=1, rand_seed=None, connection=None, samples=None,
     if vqe_option is None:
         vqe_option = {'disp': print, 'return_all': True,
                       'samples': samples}
+
+    if mea_noise is not None:
+        vqe_option['measurement_noise'] = mea_noise 
 
     qaoa_inst = QAOA(connection, list(graph.nodes()), steps=steps, cost_ham=cost_operators,
                      ref_ham=driver_operators, store_basis=True,
