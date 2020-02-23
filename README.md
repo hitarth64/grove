@@ -1,7 +1,7 @@
 Forked Grove
 =====
 
-Modified pyqaoa module to enable maxcut search for weighted matrices. 
+Modified pyqaoa module to enable maxcut search for weighted matrices. We achieve this by appropriately modifying the cost hamiltonian as defined in the maxcut_qaoa.py file. 
 
 You can find the demonstration in solution.ipynb notebook.
 
