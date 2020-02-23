@@ -1,5 +1,8 @@
-Grove
+Forked Grove
 =====
+
+Modified pyqaoa module to enable maxcut search for weighted matrices. 
+You can find the demonstration in solution.ipynb notebook.
 
 A collection of quantum algorithms built using the Rigetti Forest platform.
 Grove is licensed under the [Apache 2.0 license](https://github.com/rigetticomputing/grove/blob/master/LICENSE).
